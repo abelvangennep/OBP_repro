@@ -1,0 +1,6 @@
+ capacity fixed_costs hour_costs km_costs allowed_on_highspeed_roads
+0 4 2500 5 0.01 0
+1 6 1500 7 0.03 0
+2 6 1000 7 0.25 0
+3 20 20000 10 0.5 1
+4 60 40000 15 0.8 1
