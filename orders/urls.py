@@ -4,5 +4,5 @@ from orders.dash_apps.test_app import template
 
 urlpatterns = [
     path('', views.orders, name='orders'),
-    path('deliverer', views.orders, name='deliverer')
+    path('deliverer', views.deliverer, name='deliverer')
 ]

@@ -1,0 +1,35 @@
+.column1 {
+    box-sizing: border-box;
+    float: left;
+    width: 33.33%;
+    padding: 10 px;
+    height: 300px;
+    border: 1px solid red;
+    padding: 5px;
+}
+.column2 {
+    box-sizing: border-box;
+    float: left;
+    width: 33.33%;
+    padding: 10 px;
+    height: 300px;
+    border: 1px solid red;
+    padding: 5px;
+}
+.column3 {
+    box-sizing: border-box;
+    float: left;
+    width: 33.33%;
+    padding: 10 px;
+    height: 300px;
+    border: 1px solid red;
+    padding: 5px;
+}
+.rowx{
+    box-sizing: border-box;
+}
+.rowx:after{
+    content: "";
+    display: table;
+    clear: both;
+}
