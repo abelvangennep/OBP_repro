@@ -89,9 +89,9 @@ class Orders(models.Model):
     chinese_amount = models.PositiveIntegerField()
     sushi_amount = models.PositiveIntegerField()
     luxe_amount = models.PositiveIntegerField()
-    state = models.CharField(max_length = 1, choices = STATES, blank=True, null=True)
-    selected_restaurant = models.ForeignKey(Restaurants, on_delete=models.CASCADE, blank=True, null=True)
-    selected_deliverer = models.ForeignKey(Vehicles, on_delete=models.CASCADE, blank=True, null=True)
+    state = models.CharField(max_length = 1, choices = STATES, null=True)
+    selected_restaurant = models.ForeignKey(Restaurants, on_delete=models.CASCADE, null=True)
+    selected_deliverer = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"{self.id}"
