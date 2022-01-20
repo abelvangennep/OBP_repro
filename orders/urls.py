@@ -3,5 +3,6 @@ from . import views
 from orders.dash_apps.test_app import template
 
 urlpatterns = [
-    path('', views.orders, name='orders')
+    path('', views.orders, name='orders'),
+    path('deliverer', views.orders, name='deliverer')
 ]

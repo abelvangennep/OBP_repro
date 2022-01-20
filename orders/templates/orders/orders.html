@@ -4,7 +4,7 @@
 {% block content %}
     {%load plotly_dash%}
     <h1>Selection Menu</h1>
-
+    <h2>{{ active_order.id }}</h2>
     <div class="{% plotly_class name='SimpleExample' %} card" style="height: 100%; width:100%">
     {%plotly_app name='SimpleExample' ratio=0.65 %}
     </div>
