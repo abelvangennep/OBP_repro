@@ -5,9 +5,7 @@ from .models import Orders,Restaurants
 def orders(request):
 
     if request.method=="POST":
-        print("Hæææææ")
         active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
-        print(active_order)
         restaurant = Restaurants.objects.get(id=0)
         active_order.state = 'R'
         active_order.selected_restaurant_id = restaurant
@@ -15,15 +13,12 @@ def orders(request):
 
     active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
 
-    
-
-
 
     type_of_meals = ['pizza_amount']
-    basket = {}
+    basket = []
     for meal in type_of_meals:
         if active_order.pizza_amount > 0:
-            basket['Pizza amount'] = active_order.pizza_amount
+            basket.append(('Pizza amount', active_order.pizza_amount))
     context = {
         "active_order":active_order,
         "basket":basket,
