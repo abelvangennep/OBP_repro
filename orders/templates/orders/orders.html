@@ -5,92 +5,144 @@
 
     {%load plotly_dash%}
     <h1>Selection Menu</h1>
-    <div class="containerx">
-        <div class="row">
-            <div class="col-md-auto">
-                <h3>Active Order</h3>
-                <table>
-                    <tr>
-                      <td>Order ID:</td>
-                      <td>{{ active_order.id }}</td>
-                    </tr>
-                    <tr>
-                      <td>Order status:</td>
-                      <td>{{ order_status }}</td>
-                    </tr>
-                    <tr>
-                        <td>Order time:</td>
-                        <td>{{ active_order.order_time }}</td>
-                    </tr>
-                    <tr>
-                        <td>Latitude:</td>
-                        <td>{{ active_order.lat }}</td>
-                    </tr>
-                    <tr>
-                        <td>Longitude:</td>
-                        <td>{{ active_order.lon }}</td>
-                    </tr>
-                  </table>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card text-dark bg-warning mb-3" style="max-width: 30rem;">
+                <div class="card-header">Active Order</div>
+                <div class="card-body">
+                     <div class= "row g-0">
+                        <h5 class="card-title">Order Id: {{ active_order.id }}</h5>
+                        <div class="col-md-8"> 
+                            <table>
+                                <tr>
+                                    <td>Order status:</td>
+                                    <td>{{ order_status }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Order time:</td>
+                                    <td>{{ active_order.order_time }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Latitude:</td>
+                                    <td>{{ active_order.lat }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Longitude:</td>
+                                    <td>{{ active_order.lon }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <table>
+                                <tr>
+                                    <td>Basket:</td>
+                                    <td></td>
+                                </tr>
+                                
+                                {% for tuple in basket %}
+                                <tr>
+                                    {% for item in tuple %}
+                                    <td>{{ item }}</td>
+                                    {% endfor%}
+                                </tr>
+                                {% endfor %}  
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-auto">
-                <table>
-                    <tr>
-                      <td>Basket:</td>
-                      <td></td>
-                    </tr>
-                    
-                    {% for tuple in basket %}
-                    <tr>
-                        {% for item in tuple %}
-                            <td>{{ item }}</td>
-                        {% endfor%}
-                    </tr>
-                    {% endfor %}
-                    
-                   
-                </table>
-            </div>
-            <div class="col-md-auto">
-
+        </div>
+        <div class="col-sm-6">
+            <div class="card border-info mb-3" style="max-width: 28rem;">
+                <div class="card-header">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                          Restaurant information form:
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-lg-end">
+                          <li><button class="dropdown-item" type="button">Action</button></li>
+                          <li><button class="dropdown-item" type="button">Another action</button></li>
+                          <li><button class="dropdown-item" type="button">Something else here</button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Restaurant information:</h5>
+                    <table>
+                        <tr>
+                            <td>Latitude:</td>
+                            <td>Some number...</td>
+                        </tr>
+                        <tr>
+                            <td>Longitude:</td>
+                            <td>Some number..</td>
+                        </tr>
+                        <tr>
+                            <td>Available capacity:</td>
+                            <td>Some capacity...</td>
+                        </tr>
+                        <tr>
+                            <td>Opening hours:</td>
+                            <td>Blalalall</td>
+                        </tr>
+                        <tr>
+                            <td>Orders in preparation:</td> 
+                            <td>List of orders....</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+    
     <!--
     <div class="{% plotly_class name='SimpleExample' %} card" style="height: 100%; width:100%">
     {%plotly_app name='SimpleExample' ratio=0.65 %}
     </div>
     -->
 
-    <div class="rowx">
-        <div class="column1">
-            <h3>Option 1:</h3>
-            <h4>Best restaurant..</h4>
-            <p>Expected delivery time</p>
-            <p>Expected preperation time</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Restaurant</button>
-            </form>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card text-dark bg-info mb-3" style="max-width: 18rem;">
+                <div class="card-header">Option: 1</div>
+                <div class="card-body">
+                    <h5>Best restaurant!</h5>
+                    <p class="card-text">Expected delivery time</p>
+                    <p class="card-text">Expected preperation time</p>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" type="submit">Select Restaurant</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="column2">
-            <h3>Option 2:</h3>
-            <h4>Second best restaurant..</h4>
-            <p>Expected delivery time</p>
-            <p>Expected preperation time</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Restaurant</button>
-            </form>
+        <div class="col">
+            <div class="card text-dark bg-info mb-3" style="max-width: 18rem;">
+                <div class="card-header">Option: 2</div>
+                <div class="card-body">
+                    <h5>Second best restaurant!</h5>
+                    <p class="card-text">Expected delivery time</p>
+                    <p class="card-text">Expected preperation time</p>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" type="submit">Select Restaurant</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="column3">
-            <h3>Option 3:</h3>
-            <h4>Third best restaurant..</h4>
-            <p>Expected delivery time</p>
-            <p>Expected preperation time</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Restaurant</button>
-            </form>
+        <div class="col">
+            <div class="card text-dark bg-info mb-3" style="max-width: 18rem;">
+                <div class="card-header">Option: 3</div>
+                <div class="card-body">
+                    <h5>Third best restaurant!</h5>
+                    <p class="card-text">Expected delivery time</p>
+                    <p class="card-text">Expected preperation time</p>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" type="submit">Select Restaurant</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
