@@ -5,6 +5,7 @@
 
     {%load plotly_dash%}
     <h1>Selection Menu</h1>
+    {% if active_order %}
     <div class="containerx">
         <div class="row">
             <div class="col-md-auto">
@@ -30,66 +31,18 @@
                         <td>Longitude:</td>
                         <td>{{ active_order.lon }}</td>
                     </tr>
-                  </table>
-            </div>
-            <div class="col-md-auto">
-                <table>
-                    <tr>
-                      <td>Basket:</td>
-                      <td></td>
-                    </tr>
-                    
-                    {% for tuple in basket %}
-                    <tr>
-                        {% for item in tuple %}
-                            <td>{{ item }}</td>
-                        {% endfor%}
-                    </tr>
-                    {% endfor %}
-                    
-                   
                 </table>
-            </div>
-            <div class="col-md-auto">
-
             </div>
         </div>
     </div>
+    {% else %}
+        <h1> You searched for a non-existing order ID.</h1>
+        <h4> Try entering a round number between {{ min }} and {{max}}</h4>
+    {% endif %}
     <!--
     <div class="{% plotly_class name='SimpleExample' %} card" style="height: 100%; width:100%">
     {%plotly_app name='SimpleExample' ratio=0.65 %}
     </div>
     -->
-
-    <div class="rowx">
-        <div class="column1">
-            <h3>Option 1:</h3>
-            <h4>Best restaurant..</h4>
-            <p>Expected delivery time</p>
-            <p>Expected preperation time</p>
-            <a href="{% url 'restaurant_selection' restaurant_id=1 %}">
-                <button class="btn btn-primary" type="submit" >Select Restaurant</button>
-            </a>
-        </div>
-        <div class="column2">
-            <h3>Option 2:</h3>
-            <h4>Second best restaurant..</h4>
-            <p>Expected delivery time</p>
-            <p>Expected preperation time</p>
-            <a href="{% url 'restaurant_selection' restaurant_id=2 %}">
-                <button class="btn btn-primary" type="submit" >Select Restaurant</button>
-            </a>
-        </div>
-        <div class="column3">
-            <h3>Option 3:</h3>
-            <h4>Third best restaurant..</h4>
-            <p>Expected delivery time</p>
-            <p>Expected preperation time</p>
-            <a href="{% url 'restaurant_selection' restaurant_id=3 %}">
-                <button class="btn btn-primary" type="submit" >Select Restaurant</button>
-            </a>
-        </div>
-    </div>
-
-  
+    
 {% endblock %}

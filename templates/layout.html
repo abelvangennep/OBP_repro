@@ -13,7 +13,7 @@
     />
     <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap5.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <title>Frontendfunn - Bootstrap 5 Admin Dashboard Template</title>
+    <title>Meal delivery system - Jasper 1</title>
   </head>
   <body>
     <!-- top navigation bar -->
@@ -31,7 +31,7 @@
         <a
           class="navbar-brand me-auto ms-lg-0 ms-3 text-uppercase fw-bold"
           href="#"
-          >Frontendfunn</a
+          >Meal delivery system</a
         >
         <button
           class="navbar-toggler"
@@ -45,17 +45,20 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="topNavBar">
-          <form class="d-flex ms-auto my-3 my-lg-0">
+          <form class="d-flex ms-auto my-3 my-lg-0" method=POST action="{% url 'search_view' %}">
+            {%csrf_token%}
             <div class="input-group">
               <input
                 class="form-control"
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
+                name="main_search_bar"
               />
-              <button class="btn btn-primary" type="submit">
-                <i class="bi bi-search"></i>
-              </button>
+                <button class="btn btn-primary" type="submit">
+                  <i class="bi bi-search"></i>
+                </button>
+              </a>
             </div>
           </form>
           <ul class="navbar-nav">
@@ -94,13 +97,17 @@
           <ul class="navbar-nav">
             <li>
               <div class="text-muted small fw-bold text-uppercase px-3">
-                CORE
+                Dashboards
               </div>
             </li>
             <li>
-              <a href="#" class="nav-link px-3 active">
+              <a href="{% url 'restaurants' %}" class="nav-link px-3 active">
                 <span class="me-2"><i class="bi bi-speedometer2"></i></span>
-                <span>Dashboard</span>
+                <span>Restaurants</span>
+              </a>
+              <a href="{% url 'deliverer' %}" class="nav-link px-3 active">
+                <span class="me-2"><i class="bi bi-speedometer2"></i></span>
+                <span>Deliverer</span>
               </a>
             </li>
             <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
