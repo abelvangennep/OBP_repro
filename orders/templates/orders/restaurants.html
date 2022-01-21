@@ -59,10 +59,12 @@
                         <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                           Restaurant information form:
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-lg-end">
-                          <li><button class="dropdown-item" type="button">Action</button></li>
-                          <li><button class="dropdown-item" type="button">Another action</button></li>
-                          <li><button class="dropdown-item" type="button">Something else here</button></li>
+                        <ul class="dropdown-menu">
+                            {% for restaurant in all_restaurants %}
+                            <form action="" method="post">
+                                <li><a class="dropdown-item" href="#">{{ restaurant.id }}</a></li>
+                            </form>
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>

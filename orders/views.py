@@ -6,6 +6,11 @@ def restaurants(request):
 
     active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
 
+    all_restaurants = Restaurants.objects.all()
+    for restaurant in all_restaurants:
+        print(restaurant.id)
+
+
     
 
 
@@ -18,6 +23,7 @@ def restaurants(request):
     context = {
         "active_order":active_order,
         "basket":basket,
+        "all_restaurants":all_restaurants,
     }
 
     return render(request, 'orders/restaurants.html', context)
