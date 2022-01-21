@@ -1,15 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Orders,Restaurants
 
 # Create your views here.
 def orders(request):
-
-    if request.method=="POST":
-        active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
-        restaurant = Restaurants.objects.get(id=0)
-        active_order.state = 'R'
-        active_order.selected_restaurant_id = restaurant
-        active_order.save(update_fields=['selected_restaurant_id', 'state'])
 
     active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
 
@@ -23,12 +16,9 @@ def orders(request):
         "active_order":active_order,
         "basket":basket,
     }
-    
-
-
-
 
     return render(request, 'orders/orders.html', context)
+
 
 def deliverer(request):
     active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
@@ -45,6 +35,15 @@ def deliverer(request):
         "order_status": "Not yet subjected to Restaurant",
     }
 
-
-
     return render(request, 'orders/orders.html', context)
+
+
+def restaurant_selection(request, restaurant_id):
+
+    active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
+    restaurant = Restaurants.objects.get(id=restaurant_id)
+    active_order.state = 'R'
+    active_order.selected_restaurant_id = restaurant
+    active_order.save(update_fields=['selected_restaurant_id', 'state'])
+    
+    return redirect('orders')

@@ -67,30 +67,27 @@
             <h4>Best restaurant..</h4>
             <p>Expected delivery time</p>
             <p>Expected preperation time</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Restaurant</button>
-            </form>
+            <a href="{% url 'restaurant_selection' restaurant_id=1 %}">
+                <button class="btn btn-primary" type="submit" >Select Restaurant</button>
+            </a>
         </div>
         <div class="column2">
             <h3>Option 2:</h3>
             <h4>Second best restaurant..</h4>
             <p>Expected delivery time</p>
             <p>Expected preperation time</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Restaurant</button>
-            </form>
+            <a href="{% url 'restaurant_selection' restaurant_id=2 %}">
+                <button class="btn btn-primary" type="submit" >Select Restaurant</button>
+            </a>
         </div>
         <div class="column3">
             <h3>Option 3:</h3>
             <h4>Third best restaurant..</h4>
             <p>Expected delivery time</p>
             <p>Expected preperation time</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Restaurant</button>
-            </form>
+            <a href="{% url 'restaurant_selection' restaurant_id=3 %}">
+                <button class="btn btn-primary" type="submit" >Select Restaurant</button>
+            </a>
         </div>
     </div>
 
