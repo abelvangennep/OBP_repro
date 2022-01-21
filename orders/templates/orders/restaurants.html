@@ -111,10 +111,9 @@
                     <h5>Best restaurant!</h5>
                     <p class="card-text">Expected delivery time</p>
                     <p class="card-text">Expected preperation time</p>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <button class="btn btn-primary" type="submit">Select Restaurant</button>
-                    </form>
+                    <a href="{% url 'restaurant_selection' restaurant_id=1 %}">
+                        <button class="btn btn-primary" type="submit" >Select Restaurant</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -125,10 +124,9 @@
                     <h5>Second best restaurant!</h5>
                     <p class="card-text">Expected delivery time</p>
                     <p class="card-text">Expected preperation time</p>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <button class="btn btn-primary" type="submit">Select Restaurant</button>
-                    </form>
+                    <a href="{% url 'restaurant_selection' restaurant_id=1 %}">
+                        <button class="btn btn-primary" type="submit" >Select Restaurant</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -139,10 +137,9 @@
                     <h5>Third best restaurant!</h5>
                     <p class="card-text">Expected delivery time</p>
                     <p class="card-text">Expected preperation time</p>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <button class="btn btn-primary" type="submit">Select Restaurant</button>
-                    </form>
+                    <a href="{% url 'restaurant_selection' restaurant_id=1 %}">
+                        <button class="btn btn-primary" type="submit" >Select Restaurant</button>
+                    </a>
                 </div>
             </div>
         </div>
