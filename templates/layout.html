@@ -176,12 +176,14 @@
     </div>
 
     <main class="mt-5 pt-3">
+      <div class="container p-3 my-3 bg-dark text-white">
       {% include 'message.html' %}
 
 
       {% block content %}
       
       {% endblock %}
+      </div>
     </main>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
