@@ -171,9 +171,17 @@
         </nav>
       </div>
     </div class="row">
+    <div class="alert alert-success" role="alert">
+        This is a success alert—check it out!
+    </div>
+
     <main class="mt-5 pt-3">
-        {% block content %}
-        {% endblock %}
+      {% include 'message.html' %}
+
+
+      {% block content %}
+      
+      {% endblock %}
     </main>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
@@ -182,5 +190,12 @@
     <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'js/dataTables.bootstrap5.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
+    <script>
+      setTimeout(function(){
+        if ($('#msg').length > 0) {
+          $('#msg').remove();
+        }
+      }, 2000)
+    </script>
   </body>
 </html>
