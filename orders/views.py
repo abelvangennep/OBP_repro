@@ -6,6 +6,9 @@ def restaurants(request):
 
     active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
 
+    
+
+
 
     type_of_meals = ['pizza_amount']
     basket = []
@@ -21,18 +24,16 @@ def restaurants(request):
 
 
 def deliverer(request):
-    active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
+    active_order = Orders.objects.filter(state='R').order_by('id')[0]
 
-    type_of_meals = ["pizza's   "]
-    basket = []
+    type_of_meals = ['pizza_amount']
+    basket = {}
     for meal in type_of_meals:
         if active_order.pizza_amount > 0:
-            basket.append((meal, active_order.pizza_amount))
-    print(basket)
+            basket['Pizza amount'] = active_order.pizza_amount
     context = {
         "active_order":active_order,
-        "basket": basket,
-        "order_status": "Not yet subjected to Restaurant",
+        "basket":basket,
     }
 
     return render(request, 'orders/orders.html', context)
