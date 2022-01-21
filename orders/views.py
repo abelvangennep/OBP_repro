@@ -36,7 +36,7 @@ def deliverer(request):
         "basket":basket,
     }
 
-    return render(request, 'orders/orders.html', context)
+    return render(request, 'orders/deliverer.html', context)
 
 
 def restaurant_selection(request, restaurant_id):
