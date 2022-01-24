@@ -129,5 +129,19 @@ class Results(models.Model):
     second_total_cost_restaurant = models.FloatField(null=True, blank = True)
     third_total_cost_restaurant = models.FloatField(null=True, blank = True)
 
+class Output(models.Model):
+    order_id = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    customer_coordinate = models.FloatField(null=True, blank = True)
+    first_restaurant = models.FloatField(null=True, blank = True)
+    route_cost = models.FloatField(null=True, blank = True)
+    second_restaurante = models.FloatField(null=True, blank = True)
+    third_restaurant = models.FloatField(null=True, blank = True)
+    pizza_order_amount = models.FloatField(null=True, blank = True)
+    production_time = models.FloatField(null=True, blank = True)
+    capacity = models.FloatField(null=True, blank = True)
+    vehicle_type = models.FloatField(null=True, blank = True)
+    vehicle_cost = models.FloatField(null=True, blank = True)
+    total_cost_restaurant = models.FloatField(null=True, blank = True)
+
 
 

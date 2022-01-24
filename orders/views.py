@@ -72,3 +72,4 @@ def search_view(request):
         return render(request, 'orders/orders.html', {"max":max, "min":min})
 
     return redirect('restaurants')
+
