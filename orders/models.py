@@ -96,3 +96,27 @@ class Orders(models.Model):
     def __str__(self):
         return f"{self.id}"
 
+
+class Results(models.Model):
+    order_id = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    customer_coordinate = models.FloatField()
+    first_restaurant = models.FloatField()
+    first_duration_restaurant = models.FloatField()
+    first_distance_restaurant = models.FloatField()
+    firts_route_cost = models.FloatField()
+    second_restaurante = models.FloatField()
+    second_duration_restaurant = models.FloatField()
+    second_distance_restaurant = models.FloatField()
+    second_route_cost = models.FloatField()
+    third_restaurant = models.FloatField()
+    third_duration_restaurant = models.FloatField()
+    third_distance_restaurant = models.FloatField()
+    third_route_cost = models.FloatField()
+    pizza_order_amount = models.FloatField()
+    first_restaurant_production_time = models.FloatField()
+    second_restaurant_production_time = models.FloatField()
+    third_restaurant_production_time = models.FloatField()
+    first_restaurant_capacity = models.FloatField()
+    second_restaurant_capacity = models.FloatField()
+    third_restaurant_capacity = models.FloatField()
+
