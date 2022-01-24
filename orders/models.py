@@ -1,3 +1,4 @@
+from pickle import TRUE
 from django.db import models
 
 # Create your models here.
@@ -98,13 +99,13 @@ class Orders(models.Model):
 
 
 class Results(models.Model):
-    order_id = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    order_id = models.PositiveIntegerField(null=True, blank=TRUE)
     customer_coordinate = models.FloatField(null=True, blank = True)
     first_restaurant = models.FloatField(null=True, blank = True)
     first_duration_restaurant = models.FloatField(null=True, blank = True)
     first_distance_restaurant = models.FloatField(null=True, blank = True)
     firts_route_cost = models.FloatField(null=True, blank = True)
-    second_restaurante = models.FloatField(null=True, blank = True)
+    second_restaurant = models.FloatField(null=True, blank = True)
     second_duration_restaurant = models.FloatField(null=True, blank = True)
     second_distance_restaurant = models.FloatField(null=True, blank = True)
     second_route_cost = models.FloatField(null=True, blank = True)
