@@ -96,3 +96,38 @@ class Orders(models.Model):
     def __str__(self):
         return f"{self.id}"
 
+
+class Results(models.Model):
+    order_id = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    customer_coordinate = models.FloatField(default = None)
+    first_restaurant = models.FloatField(default = None)
+    first_duration_restaurant = models.FloatField(default = None)
+    first_distance_restaurant = models.FloatField(default = None)
+    firts_route_cost = models.FloatField(default = None)
+    second_restaurante = models.FloatField(default = None)
+    second_duration_restaurant = models.FloatField(default = None)
+    second_distance_restaurant = models.FloatField(default = None)
+    second_route_cost = models.FloatField(default = None)
+    third_restaurant = models.FloatField(default = None)
+    third_duration_restaurant = models.FloatField(default = None)
+    third_distance_restaurant = models.FloatField(default = None)
+    third_route_cost = models.FloatField(default = None)
+    pizza_order_amount = models.FloatField(default = None)
+    first_restaurant_production_time = models.FloatField(default = None)
+    second_restaurant_production_time = models.FloatField(default = None)
+    third_restaurant_production_time = models.FloatField(default = None)
+    first_restaurant_capacity = models.FloatField(default = None)
+    second_restaurant_capacity = models.FloatField(default = None)
+    third_restaurant_capacity = models.FloatField(default = None)
+    first_vehicle_type = models.FloatField(default = None)
+    first_vehicle_cost = models.FloatField(default = None)
+    second_vehicle_type = models.FloatField(default = None)
+    second_vehicle_cost = models.FloatField(default = None)
+    third_vehicle_type = models.FloatField(default = None)
+    third_vehicle_cost = models.FloatField(default = None)
+    first_total_cost_restaurant = models.FloatField(default = None)
+    second_total_cost_restaurant = models.FloatField(default = None)
+    third_total_cost_restaurant = models.FloatField(default = None)
+
+
+
