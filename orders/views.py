@@ -1,20 +1,15 @@
 from django.shortcuts import render, redirect
-from .models import Orders,Restaurants
+from .models import Orders,Restaurants, Results
 
 from django.contrib import messages
 
 # Create your views here.
 def restaurants(request):
 
-    active_order = Orders.objects.filter(state__isnull=True).order_by('id')[0]
-
+    active_order = Orders.objects.filter(state__isnull=True).exclude(pizza_amount=0).order_by('id')[0]
+    results = active_order.results_set.all()
+    print(results)
     all_restaurants = Restaurants.objects.all()
-
-
-
-    
-
-
 
     type_of_meals = ['pizza_amount']
     basket = []
