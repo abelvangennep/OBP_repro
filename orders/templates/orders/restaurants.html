@@ -7,12 +7,12 @@
     <h1>Selection Menu</h1>
     <div class="row">
         <div class="col-sm-6">
-            <div class="card text-dark bg-warning mb-3" style="max-width: 30rem;">
+            <div class="card text-dark bg-light mb-3" style="max-width: 30rem;">
                 <div class="card-header">Active Order</div>
                 <div class="card-body">
                      <div class= "row g-0">
                         <h5 class="card-title">Order Id: {{ active_order.id }}</h5>
-                        <div class="col-md-8"> 
+                        <div class="col-md-6"> 
                             <table>
                                 <tr>
                                     <td>Order status:</td>
@@ -32,28 +32,36 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-md-4">
-                            <table>
-                                <tr>
-                                    <td>Basket:</td>
-                                    <td></td>
-                                </tr>
-                                
-                                {% for tuple in basket %}
-                                <tr>
-                                    {% for item in tuple %}
-                                    <td>{{ item }}</td>
-                                    {% endfor%}
-                                </tr>
-                                {% endfor %}  
-                            </table>
+                        <div class="col-md-6">
+                            <div class="accordion" id="accordionEx">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingFour">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                            Basket
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour" data-bs-parent="#accordionEx">
+                                        <div class="accordion-body">
+                                            <table>
+                                                {% for tuple in basket %}
+                                                <tr>
+                                                    {% for item in tuple %}
+                                                    <td>{{ item }}</td>
+                                                    {% endfor%}
+                                                </tr>
+                                                {% endfor %}  
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-sm-6">
-            <div class="card border-info mb-3" style="max-width: 28rem;">
+            <div class="card text-dark bg-light mb-3" style="max-width: 35rem;">
                 <div class="card-header">
                     <div class="btn-group">
                         <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
@@ -70,37 +78,94 @@
                 </div>
                 <div class = "card-body">
                     <h5 class = "card-title">Restaurant: {{ restaurant.id }}</h5>
-                    <div class="col-md-8">
-                        <table>
-                            <tr>
-                                <td>Latitude:</td>
-                                <td>{{ restaurant.lat }}</td>
-                            </tr>
-                            <tr>
-                                <td>Longitude:</td>
-                                <td>{{ restaurant.lon }}</td>
-                            </tr>
-                            <tr>
-                                <td>Capacity:</td>
-                                <td>{{ restaurant.pizza_parallel }}</td>
-                            </tr>
-                            <tr>
-                                <td>Production time:</td>
-                                <td>{{ restaurant.pizza_production_minutes }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-4">
-                        <table>
-                            <tr>
-                                <td>Opening hours:</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Orders in preparation:</td>
-                                <td></td>
-                            </tr>
-                        </table>
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    General information
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <table>
+                                        <tr>
+                                            <td>Latitude:</td>
+                                            <td>{{ restaurant.lat }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Longitude:</td>
+                                            <td>{{ restaurant.lon }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Capacity:</td>
+                                            <td>{{ restaurant.pizza_parallel }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Production time:</td>
+                                            <td>{{ restaurant.pizza_production_minutes }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Opening hours:
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <table>
+                                        <tr>
+                                            <td>Monday:</td>
+                                            <td>{{ restaurant.mon_open }} - {{restaurant.mon_close}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tuesday:</td>
+                                            <td>{{ restaurant.tue_open }} -  {{ restaurant.tue_close }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Wednesday:</td>
+                                            <td>{{ restaurant.wed_open }} -  {{ restaurant.wed_close }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Thursday:</td>
+                                            <td>{{ restaurant.thu_open }} -  {{ restaurant.thu_close }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Friday:</td>
+                                            <td>{{ restaurant.fri_open }} -  {{ restaurant.fri_close }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Saturday:</td>
+                                            <td>{{ restaurant.sat_open }} -  {{ restaurant.sat_close }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sunday:</td>
+                                            <td>{{ restaurant.sun_open }} -  {{ restaurant.sun_close }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Orders in preparation:
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <table>
+                                        <tr>
+                                            <td>Orders in preparation:</td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

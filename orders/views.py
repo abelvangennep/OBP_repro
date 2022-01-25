@@ -15,7 +15,7 @@ def restaurants(request, restaurant_id=0):
     restaurant = Restaurants.objects.get(id=restaurant_id)
 
     
-    first_busy, second_busy, third_busy = minutes_still_busy(int(results.first_restaurant), int(results.second_restaurant), int(results.third_restaurant))
+    #first_busy, second_busy, third_busy = minutes_still_busy(int(results.first_restaurant), int(results.second_restaurant), int(results.third_restaurant))
 
 
     type_of_meals = ['pizza_amount']
@@ -113,8 +113,8 @@ def get_active_order():
     return Orders.objects.filter(state__isnull=True).exclude(pizza_amount=0).order_by('id')[0]
 
 
-def minutes_still_busy(id_1, id_2, id_3):
-    active_order = get_active_order().order_time
-
-    for id in [id_1, id_2, id_3]:
-        
+#def minutes_still_busy(id_1, id_2, id_3):
+#    active_order = get_active_order().order_time
+#
+#    for id in [id_1, id_2, id_3]:
+#        
