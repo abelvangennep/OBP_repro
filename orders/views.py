@@ -8,7 +8,7 @@ from datetime import date, time, datetime, timedelta
 # Create your views here.
 def restaurants(request):
 
-    active_order = Orders.objects.filter(state__isnull=True).exclude(pizza_amount=0).order_by('id')[0]
+    active_order = get_active_order()
     results = Results.objects.get(order_id=active_order.id)
 
     all_restaurants = Restaurants.objects.all()
@@ -32,7 +32,7 @@ def restaurants(request):
 
 
 def deliverer(request):
-    active_order = Orders.objects.filter(state='R').exclude(pizza_amount=0).order_by('id')[0]
+    active_order = get_active_order()
 
     type_of_meals = ['pizza_amount']
     basket = {}
@@ -47,28 +47,26 @@ def deliverer(request):
     return render(request, 'orders/deliverer.html', context)
 
 
-def restaurant_selection(request, restaurant_id):
+def restaurant_selection(request, option_id):
+    restaurant_id, production_minutes = restaurant_id_production(option_id)
 
     # Updating active order
-    active_order = Orders.objects.filter(state__isnull=True).exclude(pizza_amount=0).order_by('id')[0]
+    active_order = get_active_order()
     active_order.state = 'R'
     restaurant = Restaurants.objects.get(id=restaurant_id)
     active_order.selected_restaurant_id = restaurant
     active_order.save(update_fields=['selected_restaurant_id', 'state'])
 
-    # Updating Restaurant time 
-    restaurant = Restaurants.objects.get(id=restaurant_id)
-    print(type(active_order.order_time))
-    print("busy_until")
     if not restaurant.busy_until: 
-        restaurant.busy_until = active_order.order_time + timedelta(minutes=active_order.production_time)
+        restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
     elif restaurant.busy_until < active_order.order_time:
-        restaurant.busy_until = active_order.order_time + timedelta(minutes=active_order.production_time)
+        restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
     else:
-        restaurant.busy_until = restaurant.busy_until + timedelta(minutes=active_order.production_time)
-    print(type(restaurant.busy_until))
-
+        restaurant.busy_until = (datetime.combine(date(1,1,1), restaurant.busy_until) + production_minutes).time()
+    
+    restaurant.save(update_fields=['busy_until'])
     messages.success(request, f'You have selected restaurant {restaurant.id}')
+    
     return redirect('restaurants')
 
 def search_view(request):
@@ -87,4 +85,21 @@ def search_view(request):
         return render(request, 'orders/orders.html', {"max":max, "min":min})
 
     return redirect('restaurants')
+
+def restaurant_id_production(option):
+    results = Results.objects.get(order_id=get_active_order().id)
+
+    if option == 1:
+        return int(results.first_restaurant), timedelta(minutes=results.first_restaurant_production_time)
+
+    elif option == 2:
+        return int(results.second_restaurant), timedelta(minutes=results.second_restaurant_production_time)
+
+    else:
+        return int(results.third_restaurant), timedelta(minutes=results.third_restaurant_production_time)
+
+
+def get_active_order():
+    return Orders.objects.filter(state__isnull=True).exclude(pizza_amount=0).order_by('id')[0]
+
 
