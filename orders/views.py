@@ -15,7 +15,9 @@ def restaurants(request, restaurant_id=0):
     restaurant = Restaurants.objects.get(id=restaurant_id)
 
     
-    first_busy, second_busy, third_busy = minutes_still_busy(int(results.first_restaurant), int(results.second_restaurant), int(results.third_restaurant))
+    first_busy = minutes_still_busy(int(results.first_restaurant))
+    second_busy = minutes_still_busy(int(results.second_restaurant))
+    third_busy = minutes_still_busy(int(results.third_restaurant))
 
 
     type_of_meals = ['pizza_amount']
@@ -24,6 +26,9 @@ def restaurants(request, restaurant_id=0):
         if active_order.pizza_amount > 0:
             basket.append(('Pizza amount', active_order.pizza_amount))
     context = {
+        "first_busy": first_busy,
+        "second_busy": second_busy,
+        "third_busy": third_busy,
         "option1": int(results.first_restaurant),
         "option2": int(results.second_restaurant),
         "option3": int(results.third_restaurant),
@@ -113,8 +118,14 @@ def get_active_order():
     return Orders.objects.filter(state__isnull=True).exclude(pizza_amount=0).order_by('id')[0]
 
 
-def minutes_still_busy(id_1, id_2, id_3):
-    active_order = get_active_order().order_time
+def minutes_still_busy(restaurant_id):
+    order_time = get_active_order().order_time
 
-    for id in [id_1, id_2, id_3]:
-        
+    restaurant = Restaurants.objects.get(id=restaurant_id)
+
+    if restaurant.busy_until:
+        time = datetime.combine(date.today(), restaurant.busy_until) - datetime.combine(date.today(), order_time)
+        if time.total_seconds() > 0:
+            return f"Ready to start in: {int(time.total_seconds()/60)} minutes and {int(time.total_seconds()%60)} seconds"
+    
+    return "Ready to start!"
