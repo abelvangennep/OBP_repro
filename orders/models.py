@@ -107,7 +107,7 @@ class Results(models.Model):
     first_restaurant = models.FloatField(null=True, blank = True)
     first_duration_restaurant = models.FloatField(null=True, blank = True)
     first_distance_restaurant = models.FloatField(null=True, blank = True)
-    firts_route_cost = models.FloatField(null=True, blank = True)
+    first_route_cost = models.FloatField(null=True, blank = True)
     second_restaurant = models.FloatField(null=True, blank = True)
     second_duration_restaurant = models.FloatField(null=True, blank = True)
     second_distance_restaurant = models.FloatField(null=True, blank = True)
@@ -133,19 +133,27 @@ class Results(models.Model):
     second_total_cost_restaurant = models.FloatField(null=True, blank = True)
     third_total_cost_restaurant = models.FloatField(null=True, blank = True)
 
-class Output(models.Model):
-    order_id = models.ForeignKey(Orders, on_delete=models.CASCADE)
+class Analyses(models.Model):
+    order = models.ForeignKey(Orders, null=True, on_delete=models.CASCADE)
     customer_coordinate = models.FloatField(null=True, blank = True)
-    first_restaurant = models.FloatField(null=True, blank = True)
+    restaurant_id = models.PositiveIntegerField()
+    deliverer_id = models.PositiveIntegerField(default=None, null=True, blank = True)
     route_cost = models.FloatField(null=True, blank = True)
-    second_restaurante = models.FloatField(null=True, blank = True)
-    third_restaurant = models.FloatField(null=True, blank = True)
-    pizza_order_amount = models.FloatField(null=True, blank = True)
-    production_time = models.FloatField(null=True, blank = True)
-    capacity = models.FloatField(null=True, blank = True)
-    vehicle_type = models.FloatField(null=True, blank = True)
-    vehicle_cost = models.FloatField(null=True, blank = True)
-    total_cost_restaurant = models.FloatField(null=True, blank = True)
+    expected_production_time = models.TimeField(default=None)
+    expected_delivery_time = models.TimeField(null=True, blank = True)
+    selected_vehicle_type = models.FloatField(null=True, blank = True)
+    selected_vehicle_cost = models.FloatField(null=True, blank = True)
+    real_production = models.TimeField(null=True, blank = True)
+    real_delivery_time = models.TimeField(null=True, blank = True)
+
+    @staticmethod
+    def create_analyses(order, customer_coordinate, restaurant_id, route_cost, expected_production_time, real_prodution_time, expected_delivery_time):
+        """Create_analysesitem is a function which is called when a new object of Analysesitem needs to be created."""
+
+        obj = Analyses.objects.create(order=order, customer_coordinate=customer_coordinate
+                    , restaurant_id=restaurant_id, route_cost=route_cost, expected_production_time=expected_production_time,
+                    expected_delivery_time=expected_delivery_time, real_production=real_prodution_time)
+
 
 
 

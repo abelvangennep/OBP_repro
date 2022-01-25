@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Orders,Restaurants, Results
+from .models import Orders,Restaurants, Results, Analyses
 
 from django.contrib import messages
 
@@ -63,7 +63,7 @@ def restaurant_info(request, restaurant_id):
 
 
 def restaurant_selection(request, option_id):
-    restaurant_id, production_minutes = restaurant_id_production(option_id)
+    restaurant_id, route_cost, production_minutes, expected_delivery_time = restaurant_id_production(option_id)
 
     # Updating active order
     active_order = get_active_order()
@@ -74,13 +74,22 @@ def restaurant_selection(request, option_id):
 
     if not restaurant.busy_until: 
         restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
+        real_prodution_time = production_minutes
     elif restaurant.busy_until < active_order.order_time:
         restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
+        real_prodution_time = production_minutes
     else:
         restaurant.busy_until = (datetime.combine(date(1,1,1), restaurant.busy_until) + production_minutes).time()
-    
+        real_prodution_time = datetime.combine(date.today(), restaurant.busy_until) - datetime.combine(date.today(), active_order.order_time)
+
+    real_prodution_time = str(real_prodution_time)
+    production_minutes = str(production_minutes)
     restaurant.save(update_fields=['busy_until'])
     messages.success(request, f'You have selected restaurant {restaurant.id}')
+    
+    result = Results.objects.get(order_id=active_order.id)
+
+    Analyses.create_analyses(active_order, result.customer_coordinate, restaurant.id, route_cost, production_minutes, real_prodution_time, expected_delivery_time)
     
     return redirect('restaurants')
 
@@ -105,13 +114,13 @@ def restaurant_id_production(option):
     results = Results.objects.get(order_id=get_active_order().id)
 
     if option == 1:
-        return int(results.first_restaurant), timedelta(minutes=results.first_restaurant_production_time)
+        return int(results.first_restaurant), results.first_route_cost, timedelta(minutes=results.first_restaurant_production_time), str(timedelta(minutes=results.first_duration_restaurant))
 
     elif option == 2:
-        return int(results.second_restaurant), timedelta(minutes=results.second_restaurant_production_time)
+        return int(results.second_restaurant), results.second_route_cost, timedelta(minutes=results.second_restaurant_production_time), str(timedelta(minutes=results.second_duration_restaurant))
 
     else:
-        return int(results.third_restaurant), timedelta(minutes=results.third_restaurant_production_time)
+        return int(results.third_restaurant), results.third_route_cost, timedelta(minutes=results.third_restaurant_production_time), str(timedelta(minutes=results.third_duration_restaurant))
 
 
 def get_active_order():
