@@ -13,6 +13,7 @@ def restaurants(request, restaurant_id=0):
 
     all_restaurants = Restaurants.objects.all()
     restaurant = Restaurants.objects.get(id=restaurant_id)
+    orders_at_restaurant = Analyses.objects.filter(restaurant_id = restaurant_id)
 
     
     first_busy = minutes_still_busy(int(results.first_restaurant))
@@ -37,6 +38,7 @@ def restaurants(request, restaurant_id=0):
         "basket":basket,
         "all_restaurants":all_restaurants,
         "restaurant": restaurant,
+        "orders_at_restaurant": orders_at_restaurant,
     }
 
     return render(request, 'orders/restaurants.html', context)

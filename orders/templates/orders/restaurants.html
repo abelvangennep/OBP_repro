@@ -159,8 +159,9 @@
                                 <div class="accordion-body">
                                     <table>
                                         <tr>
-                                            <td>Orders in preparation:</td>
-                                            <td></td>
+                                            {% for order in orders_at_restaurant %}
+                                            <td>{{ order.order_id }}, </td>
+                                            {% endfor %}
                                         </tr>
                                     </table>
                                 </div>
