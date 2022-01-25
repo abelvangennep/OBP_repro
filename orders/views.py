@@ -6,12 +6,14 @@ from django.contrib import messages
 from datetime import date, time, datetime, timedelta
 
 # Create your views here.
-def restaurants(request):
-
+def restaurants(request, restaurant_id=0):
+    
     active_order = Orders.objects.filter(state__isnull=True).exclude(pizza_amount=0).order_by('id')[0]
     results = Results.objects.get(order_id=active_order.id)
 
     all_restaurants = Restaurants.objects.all()
+    restaurant = Restaurants.objects.get(id=restaurant_id)
+
     
     type_of_meals = ['pizza_amount']
     basket = []
@@ -26,6 +28,7 @@ def restaurants(request):
         "active_order":active_order,
         "basket":basket,
         "all_restaurants":all_restaurants,
+        "restaurant": restaurant,
     }
 
     return render(request, 'orders/restaurants.html', context)
@@ -45,6 +48,10 @@ def deliverer(request):
     }
 
     return render(request, 'orders/deliverer.html', context)
+
+def restaurant_info(request, restaurant_id):
+    restaurant = Restaurants.objects.get(id=restaurant_id)
+    return restaurants(request, restaurant_id)
 
 
 def restaurant_selection(request, restaurant_id):

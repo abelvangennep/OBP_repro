@@ -62,54 +62,42 @@
                         <ul class="dropdown-menu" style="max-height: 200px; overflow-y: auto;">
                             {% for restaurant in all_restaurants %}
                             <form action="" method="post">
-                                <li><a class="dropdown-item" href="#">{{ restaurant.id }}</a></li>
+                                <li><a class="dropdown-item" href=/restaurant_info/{{restaurant.id}}>{{ restaurant.id }}</a></li>
                             </form>
                             {% endfor %}
                         </ul>
                     </div>
-                    <table>
-                        <tr>
-                            <td>Latitude:</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Longitude:</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Capacity:</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Production time:</td>
-                            <td></td>
-                        </tr>
-                    </table>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">Restaurant information:</h5>
-                    <table>
-                        <tr>
-                            <td>Latitude:</td>
-                            <td>Some number...</td>
-                        </tr>
-                        <tr>
-                            <td>Longitude:</td>
-                            <td>Some number..</td>
-                        </tr>
-                        <tr>
-                            <td>Available capacity:</td>
-                            <td>Some capacity...</td>
-                        </tr>
-                        <tr>
-                            <td>Opening hours:</td>
-                            <td>Blalalall</td>
-                        </tr>
-                        <tr>
-                            <td>Orders in preparation:</td> 
-                            <td>List of orders....</td>
-                        </tr>
-                    </table>
+                <div class = "card-body">
+                    <h5 class = "card-title">Restaurant: {{ restaurant.id }}</h5>
+                    <div class="col-md-8">
+                        <table>
+                            <tr>
+                                <td>Latitude:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Longitude:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Opening hours:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Capacity:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Production time:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Orders in preparation:</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
