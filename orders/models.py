@@ -1,5 +1,6 @@
 from pickle import TRUE
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 class Restaurants(models.Model):
@@ -39,20 +40,22 @@ class Restaurants(models.Model):
     sushi_production_minutes = models.PositiveIntegerField(default=0)
     luxe_parallel = models.PositiveIntegerField(default=0)
     luxe_production_minutes = models.PositiveIntegerField(default=0)
-    mon_open = models.DateTimeField(default=None)
-    mon_close = models.DateTimeField(default=None)
-    tue_open = models.DateTimeField(default=None)
-    tue_close = models.DateTimeField(default=None)
-    wed_open = models.DateTimeField(default=None)
-    wed_close = models.DateTimeField(default=None)
-    thu_open = models.DateTimeField(default=None)
-    thu_close = models.DateTimeField(default=None)
-    fri_open = models.DateTimeField(default=None)
-    fri_close = models.DateTimeField(default=None)
-    sat_open = models.DateTimeField(default=None)
-    sat_close = models.DateTimeField(default=None)
-    sun_open = models.DateTimeField(default=None)
-    sun_close = models.DateTimeField(default=None)
+    mon_open = models.TimeField(default=None)
+    mon_close = models.TimeField(default=None)
+    tue_open = models.TimeField(default=None)
+    tue_close = models.TimeField(default=None)
+    wed_open = models.TimeField(default=None)
+    wed_close = models.TimeField(default=None)
+    thu_open = models.TimeField(default=None)
+    thu_close = models.TimeField(default=None)
+    fri_open = models.TimeField(default=None)
+    fri_close = models.TimeField(default=None)
+    sat_open = models.TimeField(default=None)
+    sat_close = models.TimeField(default=None)
+    sun_open = models.TimeField(default=None)
+    sun_close = models.TimeField(default=None)
+    busy_until = models.TimeField(default=datetime.now().replace(hour=0, minute=0, second=1), blank=True)
+    
 
 
 
@@ -72,7 +75,7 @@ class Orders(models.Model):
 
     lat = models.FloatField()
     lon = models.FloatField()
-    order_time = models.DateTimeField()
+    order_time = models.TimeField()
     pizza_amount = models.PositiveIntegerField()
     shoarma_amount = models.PositiveIntegerField()
     burger_amount = models.PositiveIntegerField()
