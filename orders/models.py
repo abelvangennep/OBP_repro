@@ -54,7 +54,7 @@ class Restaurants(models.Model):
     sat_close = models.TimeField(default=None)
     sun_open = models.TimeField(default=None)
     sun_close = models.TimeField(default=None)
-    busy_until = models.TimeField(default=datetime.now().replace(hour=0, minute=0, second=1), blank=True)
+    busy_until = models.TimeField(default=datetime.now().replace(hour=0, minute=0, second=1),null=True, blank=True)
     
 
 
@@ -123,12 +123,15 @@ class Results(models.Model):
     first_restaurant_capacity = models.FloatField(null=True, blank = True)
     second_restaurant_capacity = models.FloatField(null=True, blank = True)
     third_restaurant_capacity = models.FloatField(null=True, blank = True)
+    first_actual_production_time = models.FloatField(null=True, blank=True)
+    second_actual_production_time = models.FloatField(null=True, blank=True)
+    third_actual_production_time = models.FloatField(null=True, blank=True)
     first_vehicle_type = models.FloatField(null=True, blank = True)
-    first_vehicle_cost = models.FloatField(null=True, blank = True)
+    first_min_vehicle_cost = models.FloatField(null=True, blank=True)
     second_vehicle_type = models.FloatField(null=True, blank = True)
-    second_vehicle_cost = models.FloatField(null=True, blank = True)
+    second_min_vehicle_cost = models.FloatField(null=True, blank = True)
     third_vehicle_type = models.FloatField(null=True, blank = True)
-    third_vehicle_cost = models.FloatField(null=True, blank = True)
+    third_min_vehicle_cost = models.FloatField(null=True, blank = True)
     first_total_cost_restaurant = models.FloatField(null=True, blank = True)
     second_total_cost_restaurant = models.FloatField(null=True, blank = True)
     third_total_cost_restaurant = models.FloatField(null=True, blank = True)
