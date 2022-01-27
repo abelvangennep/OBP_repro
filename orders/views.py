@@ -1,3 +1,4 @@
+from re import I
 from django.shortcuts import render, redirect
 from .models import Orders,Restaurants, Results, Analyses
 
@@ -5,13 +6,34 @@ from django.contrib import messages
 
 from datetime import date, time, datetime, timedelta
 
+from django.db.models import Q
+
 # Create your views here.
 def restaurants(request, restaurant_id=0):
 
     active_order = get_active_order()
     results = Results.objects.get(order_id=active_order.id)
+    
 
-    all_restaurants = Restaurants.objects.all()
+    all_restaurants_pizza = Restaurants.objects.filter(~Q(pizza_parallel=0))
+    i=0
+    for restaurant in all_restaurants_pizza:
+        if restaurant.restaurant_id_pizza:
+            continue
+        else:
+            restaurant.restaurant_id_pizza = i
+            i = i+1
+            restaurant.save(update_fields=['restaurant_id_pizza'])
+
+
+
+    option_1_id = Restaurants.objects.get(restaurant_id_pizza=int(results.first_restaurant))
+    option_2_id = Restaurants.objects.get(restaurant_id_pizza=int(results.second_restaurant))
+    option_3_id = Restaurants.objects.get(restaurant_id_pizza=int(results.third_restaurant))
+
+    
+
+
     restaurant = Restaurants.objects.get(id=restaurant_id)
     orders_at_restaurant = Analyses.objects.filter(restaurant_id = restaurant_id)
 
@@ -31,12 +53,15 @@ def restaurants(request, restaurant_id=0):
         "second_busy": second_busy,
         "third_busy": third_busy,
         "option1": int(results.first_restaurant),
+        "option_1_id": option_1_id,
+        "option_2_id": option_2_id,
+        "option_3_id": option_3_id,
         "option2": int(results.second_restaurant),
         "option3": int(results.third_restaurant),
         "results":results,
         "active_order":active_order,
         "basket":basket,
-        "all_restaurants":all_restaurants,
+        "all_restaurants_pizza":all_restaurants_pizza,
         "restaurant": restaurant,
         "orders_at_restaurant": orders_at_restaurant,
     }
@@ -67,10 +92,11 @@ def restaurant_info(request, restaurant_id):
 def restaurant_selection(request, option_id):
     restaurant_id, route_cost, production_minutes, expected_delivery_time = restaurant_id_production(option_id)
 
+
     # Updating active order
     active_order = get_active_order()
     active_order.state = 'R'
-    restaurant = Restaurants.objects.get(id=restaurant_id)
+    restaurant = Restaurants.objects.get(restaurant_id_pizza=restaurant_id)
     active_order.selected_restaurant_id = restaurant
     active_order.save(update_fields=['selected_restaurant_id', 'state'])
 
