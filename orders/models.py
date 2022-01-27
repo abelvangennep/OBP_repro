@@ -55,9 +55,7 @@ class Restaurants(models.Model):
     sun_open = models.TimeField(default=None)
     sun_close = models.TimeField(default=None)
     busy_until = models.TimeField(default=datetime.now().replace(hour=0, minute=0, second=1),null=True, blank=True)
-    
-
-
+    restaurant_id_pizza = models.PositiveIntegerField(null=True,blank=True)
 
 class Vehicles(models.Model):
     capacity = models.PositiveIntegerField(default=0)
