@@ -151,10 +151,24 @@ class Analyses(models.Model):
     def create_analyses(order, customer_coordinate, restaurant_id, route_cost, expected_production_time, real_prodution_time, expected_delivery_time):
         """Create_analysesitem is a function which is called when a new object of Analysesitem needs to be created."""
 
-        obj = Analyses.objects.create(order=order, customer_coordinate=customer_coordinate
+        Analyses.objects.create(order=order, customer_coordinate=customer_coordinate
                     , restaurant_id=restaurant_id, route_cost=route_cost, expected_production_time=expected_production_time,
                     expected_delivery_time=expected_delivery_time, real_production=real_prodution_time)
 
 
+class Deliverers(models.Model):
+    vehicle = models.ForeignKey(Vehicles, null=True, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurants, null=True, on_delete=models.CASCADE)
+    orders = models.ManyToManyField(Orders)
+    capacity_available = models.PositiveBigIntegerField()
+    busy_until = models.TimeField(default=datetime.now().replace(hour=0, minute=0, second=1),null=True, blank=True)
+
+
+    @staticmethod
+    def create_deliverer(vehicle, restaurants, order, capacity_available, busy_until):
+        """Create_Deliverers is a function which is called when a new object of Analysesitem needs to be created."""
+        obj = Deliverers.objects.create(vehicle=vehicle, restaurant=restaurants, capacity_available=capacity_available, busy_until=busy_until)
+
+        obj.orders.add(order)
 
 

@@ -1,6 +1,6 @@
 from re import I
 from django.shortcuts import render, redirect
-from .models import Orders,Restaurants, Results, Analyses
+from .models import Orders,Restaurants, Results, Analyses, Deliverers, Vehicles
 
 from django.contrib import messages
 
@@ -31,8 +31,6 @@ def restaurants(request, restaurant_id=0):
     option_2_id = Restaurants.objects.get(restaurant_id_pizza=int(results.second_restaurant))
     option_3_id = Restaurants.objects.get(restaurant_id_pizza=int(results.third_restaurant))
 
-    
-
 
     restaurant = Restaurants.objects.get(id=restaurant_id)
     orders_at_restaurant = Analyses.objects.filter(restaurant_id = restaurant_id)
@@ -42,13 +40,23 @@ def restaurants(request, restaurant_id=0):
     second_busy = minutes_still_busy(int(results.second_restaurant))
     third_busy = minutes_still_busy(int(results.third_restaurant))
 
+    first_deliverers = deliverers_available(active_order.order_time, int(results.first_restaurant))
+    second_deliverers = deliverers_available(active_order.order_time, int(results.second_restaurant))
+    third_deliverers = deliverers_available(active_order.order_time, int(results.third_restaurant))
 
     type_of_meals = ['pizza_amount']
     basket = []
     for meal in type_of_meals:
         if active_order.pizza_amount > 0:
             basket.append(('Pizza amount', active_order.pizza_amount))
+
+
+
+
     context = {
+        "first_deliverers": first_deliverers,
+        "second_deliverers": second_deliverers,
+        "third_deliverers": third_deliverers,
         "first_busy": first_busy,
         "second_busy": second_busy,
         "third_busy": third_busy,
@@ -117,8 +125,14 @@ def restaurant_selection(request, option_id):
     
     result = Results.objects.get(order_id=active_order.id)
 
-    Analyses.create_analyses(active_order, result.customer_coordinate, restaurant.id, route_cost, production_minutes, real_prodution_time, expected_delivery_time)
+    Analyses.create_analyses(active_order, result.customer_coordinate, restaurant.id, route_cost, production_minutes, real_prodution_time, str(expected_delivery_time))
     
+    vehicle = Vehicles.objects.get(pk=result.first_vehicle_type)
+    capacity = vehicle.capacity - active_order.pizza_amount
+
+
+    Deliverers.create_deliverer(vehicle, restaurant, active_order, capacity, restaurant.busy_until)
+
     return redirect('restaurants')
 
 def search_view(request):
@@ -142,13 +156,13 @@ def restaurant_id_production(option):
     results = Results.objects.get(order_id=get_active_order().id)
 
     if option == 1:
-        return int(results.first_restaurant), results.first_route_cost, timedelta(minutes=results.first_restaurant_production_time), str(timedelta(minutes=results.first_duration_restaurant))
+        return int(results.first_restaurant), results.first_route_cost, timedelta(minutes=results.first_restaurant_production_time), timedelta(minutes=results.first_duration_restaurant)
 
     elif option == 2:
-        return int(results.second_restaurant), results.second_route_cost, timedelta(minutes=results.second_restaurant_production_time), str(timedelta(minutes=results.second_duration_restaurant))
+        return int(results.second_restaurant), results.second_route_cost, timedelta(minutes=results.second_restaurant_production_time), timedelta(minutes=results.second_duration_restaurant)
 
     else:
-        return int(results.third_restaurant), results.third_route_cost, timedelta(minutes=results.third_restaurant_production_time), str(timedelta(minutes=results.third_duration_restaurant))
+        return int(results.third_restaurant), results.third_route_cost, timedelta(minutes=results.third_restaurant_production_time), timedelta(minutes=results.third_duration_restaurant)
 
 
 def get_active_order():
@@ -166,3 +180,16 @@ def minutes_still_busy(restaurant_id):
             return f"Ready to start in: {int(time.total_seconds()/60)} minutes and {int(time.total_seconds()%60)} seconds"
     
     return "Ready to start!"
+
+
+def deliverers_available(order_time, restaurant_id):
+    objects = Deliverers.objects.filter(restaurant_id=restaurant_id)
+    available_deliverers = []
+
+    if objects:
+        for obj in objects:
+            time = datetime.combine(date.today(), obj.busy_until) - datetime.combine(date.today(), order_time)
+            if time.total_seconds() > 0:
+                available_deliverers.append(obj)
+    
+    return available_deliverers
