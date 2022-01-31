@@ -111,46 +111,93 @@ def restaurant_selection(request, option_id):
                 basket['Pizza amount'] = active_order.pizza_amount
 
         context = {
+            "option_id":option_id,
             "deliverers_at_restaurant":deliverers_at_restaurant,
             "orders_at_restaurant":orders_at_restaurant,
             "active_order":active_order,
             "basket":basket,
         }
-        
+
         return render(request, 'orders/deliverer.html', context)
 
     else:
-        active_order.state = 'R'
-        restaurant = Restaurants.objects.get(restaurant_id_pizza=restaurant_id)
-        active_order.selected_restaurant_id = restaurant
-        active_order.save(update_fields=['selected_restaurant_id', 'state'])
-
-        if not restaurant.busy_until: 
-            restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
-            real_prodution_time = production_minutes
-        elif restaurant.busy_until < active_order.order_time:
-            restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
-            real_prodution_time = production_minutes
-        else:
-            restaurant.busy_until = (datetime.combine(date(1,1,1), restaurant.busy_until) + production_minutes).time()
-            real_prodution_time = datetime.combine(date.today(), restaurant.busy_until) - datetime.combine(date.today(), active_order.order_time)
-
-        real_prodution_time = str(real_prodution_time)
-        production_minutes = str(production_minutes)
-        restaurant.save(update_fields=['busy_until'])
-        messages.success(request, f'You have selected restaurant {restaurant.id}')
-        
-        result = Results.objects.get(order_id=active_order.id)
-
-        Analyses.create_analyses(active_order, result.customer_coordinate, restaurant.id, route_cost, production_minutes, real_prodution_time, str(expected_delivery_time))
-        
-        vehicle = Vehicles.objects.get(pk=result.first_vehicle_type)
-        capacity = vehicle.capacity - active_order.pizza_amount
+        return non_merge(request, option_id)
 
 
-        Deliverers.create_deliverer(vehicle, restaurant, active_order, capacity, restaurant.busy_until)
+def non_merge(request, option_id):
+    restaurant_id, route_cost, production_minutes, expected_delivery_time = restaurant_id_production(option_id)
+    active_order = get_active_order()
 
-        return redirect('restaurants')
+    active_order.state = 'R'
+    restaurant = Restaurants.objects.get(restaurant_id_pizza=restaurant_id)
+    active_order.selected_restaurant_id = restaurant
+    active_order.save(update_fields=['selected_restaurant_id', 'state'])
+
+    if not restaurant.busy_until: 
+        restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
+        real_prodution_time = production_minutes
+    elif restaurant.busy_until < active_order.order_time:
+        restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
+        real_prodution_time = production_minutes
+    else:
+        restaurant.busy_until = (datetime.combine(date(1,1,1), restaurant.busy_until) + production_minutes).time()
+        real_prodution_time = datetime.combine(date.today(), restaurant.busy_until) - datetime.combine(date.today(), active_order.order_time)
+
+    real_prodution_time = str(real_prodution_time)
+    production_minutes = str(production_minutes)
+    restaurant.save(update_fields=['busy_until'])
+    messages.success(request, f'You have selected restaurant {restaurant.id}')
+    
+    result = Results.objects.get(order_id=active_order.id)
+
+    Analyses.create_analyses(active_order, result.customer_coordinate, restaurant.id, route_cost, production_minutes, real_prodution_time, str(expected_delivery_time))
+    
+    vehicle = Vehicles.objects.get(pk=result.first_vehicle_type)
+    capacity = vehicle.capacity - active_order.pizza_amount
+
+
+    Deliverers.create_deliverer(vehicle, restaurant, active_order, capacity, restaurant.busy_until)
+
+    return redirect('restaurants')
+
+def merge(request, deliverer_id):
+    deliverer = Deliverers.objects.get(pk=deliverer_id)
+
+    restaurant_id, route_cost, production_minutes, expected_delivery_time = restaurant_id_production(deliverer.restaurant_id)
+    active_order = get_active_order()
+
+    active_order.state = 'R'
+    restaurant = Restaurants.objects.get(restaurant_id_pizza=restaurant_id)
+    active_order.selected_restaurant_id = restaurant
+    active_order.save(update_fields=['selected_restaurant_id', 'state'])
+
+    if not restaurant.busy_until: 
+        restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
+        real_prodution_time = production_minutes
+    elif restaurant.busy_until < active_order.order_time:
+        restaurant.busy_until = (datetime.combine(date(1,1,1), active_order.order_time) + production_minutes).time()
+        real_prodution_time = production_minutes
+    else:
+        restaurant.busy_until = (datetime.combine(date(1,1,1), restaurant.busy_until) + production_minutes).time()
+        real_prodution_time = datetime.combine(date.today(), restaurant.busy_until) - datetime.combine(date.today(), active_order.order_time)
+
+    real_prodution_time = str(real_prodution_time)
+    production_minutes = str(production_minutes)
+    restaurant.save(update_fields=['busy_until'])
+    messages.success(request, f'You have merged order {active_order.id}, with deliverer {deliverer.id}')
+    
+    result = Results.objects.get(order_id=active_order.id)
+    ### Still to implement:
+    # Discount route cost
+    # Change production_time of prev order 
+    Analyses.create_analyses(active_order, result.customer_coordinate, restaurant.id, route_cost, production_minutes, real_prodution_time, str(expected_delivery_time))
+    
+    capacity = deliverer.capacity_available - active_order.pizza_amount
+
+    Deliverers.add_order(deliverer_id, active_order, capacity, restaurant.busy_until)
+
+    return redirect('restaurants')
+
 
 def search_view(request):
     if request.method == "POST":
@@ -176,6 +223,18 @@ def restaurant_id_production(option):
         return int(results.first_restaurant), results.first_route_cost, timedelta(minutes=results.first_restaurant_production_time), timedelta(minutes=results.first_duration_restaurant)
 
     elif option == 2:
+        return int(results.second_restaurant), results.second_route_cost, timedelta(minutes=results.second_restaurant_production_time), timedelta(minutes=results.second_duration_restaurant)
+
+    else:
+        return int(results.third_restaurant), results.third_route_cost, timedelta(minutes=results.third_restaurant_production_time), timedelta(minutes=results.third_duration_restaurant)
+
+def restaurant_id_merge(restaurant_id):
+    results = Results.objects.get(order_id=get_active_order().id)
+
+    if int(results.first_restaurant) == restaurant_id:
+        return int(results.first_restaurant), results.first_route_cost, timedelta(minutes=results.first_restaurant_production_time), timedelta(minutes=results.first_duration_restaurant)
+
+    elif int(results.second_restaurant) == restaurant_id:
         return int(results.second_restaurant), results.second_route_cost, timedelta(minutes=results.second_restaurant_production_time), timedelta(minutes=results.second_duration_restaurant)
 
     else:
@@ -220,8 +279,6 @@ def order_active(reastaurant_id, order_time):
         
         order_time_old_order = datetime.combine(date.min, Orders.objects.get(pk=order.order_id).order_time) - datetime.min
         prep_time = datetime.combine(date.min, order.real_production) - datetime.min
-
-        print(type(order_time))
 
         order_time_new = datetime.combine(date.min, order_time) - datetime.min
         time = order_time_old_order + prep_time - order_time_new

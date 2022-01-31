@@ -171,4 +171,18 @@ class Deliverers(models.Model):
 
         obj.orders.add(order)
 
+    @staticmethod
+    def add_order(id, order, capacity_available, busy_until, vehicle=None):
+        """Create_Deliverers is a function which is called when a new object of Analysesitem needs to be created."""
+        obj = Deliverers.objects.get(pk=id)
+        obj.busy_until = busy_until
+        obj.capacity_available = capacity_available
+
+        if vehicle:
+           obj.vehicle = vehicle 
+
+        obj.orders.add(order)
+
+        obj.save()
+
 
