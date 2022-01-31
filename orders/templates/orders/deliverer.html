@@ -2,39 +2,31 @@
 {% load static %}
 
 {% block content %}
-    {%load plotly_dash%}
     <h1>Deliverer</h1>
     <h2>Choose a deliverer for order {{ active_order.id }}</h2>
-
-    <div class="rowx">
-        <div class="column1">
-            <h3>Option 1:</h3>
-            <h4>Deliverer 1..</h4>
-            <p>Order number..</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Deliverer</button>
-            </form>
+    <div class="container">
+        {% for deliverer in deliverers_at_restaurant %}
+        <div class="row row-cols-3">
+          <div class="col">
+            Deliver ID: {{ deliverer.id }}
+          </div>
+          <div class="col">
+            Orders: {{deliverer.orders_id.id}}
+            {% for object in deliverer.orders.all %}
+                {{ object.id }}
+            {% endfor %}
+          </div>
+          <div class="col">
+            <a href=/restaurant_selection/{{deliverer.deliverers_id}}>
+                <button type="button" class="btn btn-outline-primary" >Select Deliverer</button>
+            </a>
+          </div>
         </div>
-        <div class="column2">
-            <h3>Option 2:</h3>
-            <h4>Second deliverer..</h4>
-            <p>Order number..</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Deliverer</button>
-            </form>
-        </div>
-        <div class="column3">
-            <h3>Option 3:</h3>
-            <h4>Deliverer 3</h4>
-            <p>Expected delivery time</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Deliverer</button>
-            </form>
-        </div>
+        {% endfor %}
     </div>
-
+    <div class="rowx">
+    <a href=/restaurant_selection/{{deliverer.deliverers_id}}>
+        <button type="button" class="btn btn-outline-primary">Call for a new deliverer</button>
+    </a>
   
 {% endblock %}

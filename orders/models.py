@@ -159,7 +159,7 @@ class Analyses(models.Model):
 class Deliverers(models.Model):
     vehicle = models.ForeignKey(Vehicles, null=True, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurants, null=True, on_delete=models.CASCADE)
-    orders = models.ManyToManyField(Orders)
+    orders = models.ManyToManyField(Orders, related_name='deliverers')
     capacity_available = models.PositiveBigIntegerField()
     busy_until = models.TimeField(default=datetime.now().replace(hour=0, minute=0, second=1),null=True, blank=True)
 
