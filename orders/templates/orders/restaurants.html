@@ -158,11 +158,12 @@
                             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <table>
+                                        {% for order in orders_at_restaurant %}
                                         <tr>
-                                            {% for order in orders_at_restaurant %}
-                                            <td>{{ order.order_id }}, </td>
-                                            {% endfor %}
+                                            <td>Order ID:</td>
+                                            <td>{{ order.order_id }} </td>
                                         </tr>
+                                        {% endfor %}
                                     </table>
                                 </div>
                             </div>
@@ -188,6 +189,9 @@
                     <p class="card-text">Delivery time: {{ results.first_duration_restaurant }}</p>
                     <p class="card-text">Preparation time: {{ results.first_restaurant_production_time }}</p>
                     <p class="card-text">{{ first_busy }}</p>
+                    {% for deliverer in first_deliverers %}
+                        <p class="card-text">Capacity of deliverer {{ deliverer.id }}: {{ deliverer.capacity_available }}</p>
+                    {% endfor %}
                     <a href=/restaurant_selection/1>
                         <button class="btn btn-primary" type="submit" >Select Restaurant</button>
                     </a>
@@ -202,6 +206,9 @@
                     <p class="card-text">Delivery time: {{ results.second_duration_restaurant }}</p>
                     <p class="card-text">Preparation time: {{ results.second_restaurant_production_time }}</p>
                     <p class="card-text">{{ second_busy }}</p>
+                    {% for deliverer in second_deliverers %}
+                        <p class="card-text">Capacity of deliverer {{ deliverer.id }}: {{ deliverer.capacity_available }}</p>
+                    {% endfor %}
                     <a href="/restaurant_selection/2">
                         <button class="btn btn-primary" type="submit" >Select Restaurant</button>
                     </a>
@@ -216,6 +223,9 @@
                     <p class="card-text">Delivery time: {{ results.third_duration_restaurant }}</p>
                     <p class="card-text">Preparation time: {{ results.third_restaurant_production_time }}</p>
                     <p class="card-text">{{ third_busy }}</p>
+                    {% for deliverer in third_deliverers %}
+                        <p class="card-text">Capacity of deliverer {{ deliverer.id }}: {{ deliverer.capacity_available }}</p>
+                    {% endfor %}
                     <a href="/restaurant_selection/3">
                         <button class="btn btn-primary" type="submit" >Select Restaurant</button>
                     </a>
