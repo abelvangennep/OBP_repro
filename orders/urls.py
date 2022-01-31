@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from orders.dash_apps.test_app import template
+from orders.dash_apps.test_app import simpleexample
 
 urlpatterns = [
     path('', views.restaurants, name='restaurants'),

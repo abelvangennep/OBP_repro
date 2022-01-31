@@ -3,38 +3,10 @@
 
 {% block content %}
     {%load plotly_dash%}
-    <h1>Deliverer</h1>
-    <h2>Choose a deliverer for order {{ active_order.id }}</h2>
+    <h1>Overview</h1>
+    <div class="{% plotly_class name='SimpleExample'%} card" style="height: 100%; width: 100%"></div>
+    {% plotly_app name='SimpleExample' ratio=0.65 %}
 
-    <div class="rowx">
-        <div class="column1">
-            <h3>Option 1:</h3>
-            <h4>Deliverer 1..</h4>
-            <p>Order number..</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Deliverer</button>
-            </form>
-        </div>
-        <div class="column2">
-            <h3>Option 2:</h3>
-            <h4>Second deliverer..</h4>
-            <p>Order number..</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Deliverer</button>
-            </form>
-        </div>
-        <div class="column3">
-            <h3>Option 3:</h3>
-            <h4>Deliverer 3</h4>
-            <p>Expected delivery time</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <button class="btn btn-primary" type="submit">Select Deliverer</button>
-            </form>
-        </div>
-    </div>
-
+    
   
 {% endblock %}
