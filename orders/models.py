@@ -1,6 +1,7 @@
 from pickle import TRUE
 from django.db import models
 from datetime import datetime
+from django.db.models import Q
 
 # Create your models here.
 class Restaurants(models.Model):
@@ -56,6 +57,21 @@ class Restaurants(models.Model):
     sun_close = models.TimeField(default=None)
     busy_until = models.TimeField(default=datetime.now().replace(hour=0, minute=0, second=1),null=True, blank=True)
     restaurant_id_pizza = models.PositiveIntegerField(null=True,blank=True)
+
+    @staticmethod
+    def fill_id_pizza():
+        """Fill the id pizza field, so that the app can filter on pizza only orders"""
+
+        all_restaurants_pizza = Restaurants.objects.filter(~Q(pizza_parallel=0))
+        i=0
+        for restaurant in all_restaurants_pizza:
+            if restaurant.restaurant_id_pizza:
+                continue
+            else:
+                restaurant.restaurant_id_pizza = i
+                i = i+1
+                restaurant.save(update_fields=['restaurant_id_pizza'])
+        return all_restaurants_pizza
 
 class Vehicles(models.Model):
     capacity = models.PositiveIntegerField(default=0)
@@ -151,9 +167,10 @@ class Analyses(models.Model):
     def create_analyses(order, customer_coordinate, restaurant_id, route_cost, expected_production_time, real_prodution_time, expected_delivery_time):
         """Create_analysesitem is a function which is called when a new object of Analysesitem needs to be created."""
 
-        Analyses.objects.create(order=order, customer_coordinate=customer_coordinate
+        obj = Analyses.objects.create(order=order, customer_coordinate=customer_coordinate
                     , restaurant_id=restaurant_id, route_cost=route_cost, expected_production_time=expected_production_time,
                     expected_delivery_time=expected_delivery_time, real_production=real_prodution_time)
+        return obj
 
 
 class Deliverers(models.Model):
@@ -170,6 +187,7 @@ class Deliverers(models.Model):
         obj = Deliverers.objects.create(vehicle=vehicle, restaurant=restaurants, capacity_available=capacity_available, busy_until=busy_until)
 
         obj.orders.add(order)
+        return obj
 
     @staticmethod
     def add_order(id, order, capacity_available, busy_until, vehicle=None):
@@ -184,5 +202,7 @@ class Deliverers(models.Model):
         obj.orders.add(order)
 
         obj.save()
+
+        return obj
 
 
