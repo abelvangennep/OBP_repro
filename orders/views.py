@@ -10,7 +10,7 @@ import pandas as pd
 from django.db.models import Q
 
 # Create your views here.
-def restaurants(request, restaurant_id=0):
+def restaurants(request, restaurant_id=3):
 
     active_order = get_active_order()
     results = Results.objects.get(order_id=active_order.id)
@@ -118,7 +118,7 @@ def restaurant_selection(request, option_id):
             "basket":basket,
         }
 
-        return render(request, 'orders/deliverer.html', context)
+        return render(request, 'orders/merge.html', context)
 
     else:
         return non_merge(request, option_id)

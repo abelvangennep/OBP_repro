@@ -11,3 +11,5 @@ pip install django_plotly_dash
 pip install channels daphne redis django-redis channels-redis
 
 pip install pandas
+
+pip install django_pandas
