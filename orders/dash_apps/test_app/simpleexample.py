@@ -4,6 +4,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import plotly.express as px
+import plotly.figure_factory as ff
 import pandas as pd
 
 from django_plotly_dash import DjangoDash
@@ -84,7 +85,9 @@ app.layout = html.Div([
 def update_graph(selected_val):
     if selected_val == 'expected_production_time':
         dff = df.sort_values(by='expected_production_time')
-        figln = px.histogram(dff, x='id', y = 'expected_production_time', labels={'expected_production_time': 'Expected production time'}, marginal='box')
+        group_labels = ['distplot']
+        print('Hér')
+        figln = ff.create_distplot(dff['expected_production_time'], group_labels)
     elif selected_val == 'real_production':
         dff = df.sort_values(by='real_production')
         figln = px.histogram(dff, x='id', y = 'real_production', marginal = 'box')
