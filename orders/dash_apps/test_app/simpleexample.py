@@ -6,6 +6,9 @@ import plotly.graph_objs as go
 import plotly.express as px
 import plotly.figure_factory as ff
 import pandas as pd
+import datetime as datetime
+from datetime import time
+
 
 from django_plotly_dash import DjangoDash
 
@@ -62,15 +65,16 @@ output = output.append(overview_third, ignore_index = True)
 
 
 app.layout = html.Div([
-    html.H2("Blaa"),
+    html.H2("Density distributions of perfomance features", style = {'color': 'white'}),
     dcc.Dropdown(id='my-dpdn', multi=False, value='expected_production_time',
                          options=[{'label': 'Expected production time', 'value': 'expected_production_time'},
                          {'label': 'Real production time', 'value': 'real_production'},
-                         {'label': 'Expected delivery time', 'value': 'expected_delivery_time'},
-                         {'label': 'Real delivery time', 'value': 'real_delivery_time'}],
+                         {'label': 'Delivery time', 'value': 'expected_delivery_time'},
+                         {'label': 'Comparing production time with different options', 'value': 'production_time_options'},
+                         {'label': 'Comparing route cost with different options', 'value': 'route_cost_options'}]
                          ),
     dcc.Graph(id='fig', figure ={}),
-    html.H2('Meeeiraaa'),
+    html.H2('Compare averages between options:', style = {'color': 'white'}),
     dcc.Dropdown(id='my-dpdn2', multi=False, value='first',
                          options=[{'label': 'Average delivery and production time', 'value': 'first'},
                          {'label': 'Average cost', 'value': 'second'},],
@@ -84,19 +88,56 @@ app.layout = html.Div([
 
 def update_graph(selected_val):
     if selected_val == 'expected_production_time':
-        dff = df.sort_values(by='expected_production_time')
-        group_labels = ['distplot']
-        print('Hér')
-        figln = ff.create_distplot(dff['expected_production_time'], group_labels)
+        dff = []
+        dfff = []
+        for x in df['expected_production_time']:
+            dff.append(x.hour*60 + x.minute + x.second/60)
+        dfff = [dff]
+        groups_labels = ['']
+        figln = ff.create_distplot(dfff, groups_labels)
     elif selected_val == 'real_production':
-        dff = df.sort_values(by='real_production')
-        figln = px.histogram(dff, x='id', y = 'real_production', marginal = 'box')
+        dff = []
+        dfff = []
+        for x in df['real_production']:
+            dff.append(x.hour*60 + x.minute + x.second/60)
+        dfff = [dff]
+        groups_labels = ['']
+        figln = ff.create_distplot(dfff, groups_labels)
     elif selected_val == 'expected_delivery_time':
-        dff = df.sort_values(by='expected_delivery_time')
-        figln = px.bar(dff, x='id', y = 'expected_delivery_time')
-    elif selected_val == 'real_delivery_time':
-        dff = df.sort_values(by='real_delivery_time')
-        figln = px.bar(dff, x='id', y = 'real_delivery_time')
+        dff = []
+        dfff = []
+        for x in df['expected_delivery_time']:
+            dff.append(x.hour*60 + x.minute + x.second/60)
+        dfff = [dff]
+        groups_labels = ['']
+        figln = ff.create_distplot(dfff, groups_labels)
+    elif selected_val == 'production_time_options':
+        opt_1 = []
+        opt_2 = []
+        opt_3 = []
+        for x in df2['first_actual_production_time']:
+            opt_1.append(x)
+        for x in df2['second_actual_production_time']:
+            opt_2.append(x)
+        for x in df2['third_actual_production_time']:
+            opt_3.append(x)
+        all_opt = [opt_1, opt_2, opt_3]
+        print(all_opt)
+        group_labels = ['Option 1', 'Option 2', 'Option 3']
+        figln = ff.create_distplot(all_opt, group_labels, bin_size =5)
+    elif selected_val == 'route_cost_options':
+        opt_1 = []
+        opt_2 = []
+        opt_3 = []
+        for x in df2['first_route_cost']:
+            opt_1.append(x)
+        for x in df2['second_route_cost']:
+            opt_2.append(x)
+        for x in df2['third_route_cost']:
+            opt_3.append(x)
+        all_opt = [opt_1, opt_2, opt_3]
+        group_labels = ['Option 1', 'Option 2', 'Option 3']
+        figln = ff.create_distplot(all_opt, group_labels, bin_size =50)
     return figln
 
 @app.callback(
