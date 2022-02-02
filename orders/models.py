@@ -111,7 +111,7 @@ class Orders(models.Model):
     selected_restaurant = models.ForeignKey(Restaurants, on_delete=models.CASCADE, null=True)
     selected_deliverer = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True)
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.id}"
 
 
@@ -205,5 +205,3 @@ class Deliverers(models.Model):
         obj.save()
 
         return obj
-
-
