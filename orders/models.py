@@ -111,7 +111,7 @@ class Orders(models.Model):
     selected_restaurant = models.ForeignKey(Restaurants, on_delete=models.CASCADE, null=True)
     selected_deliverer = models.ForeignKey(Vehicles, on_delete=models.CASCADE, null=True)
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.id}"
 
 
@@ -141,10 +141,10 @@ class Results(models.Model):
     second_actual_production_time = models.FloatField(null=True, blank=True)
     third_actual_production_time = models.FloatField(null=True, blank=True)
     first_vehicle_type = models.FloatField(null=True, blank = True)
-    first_min_vehicle_cost = models.FloatField(null=True, blank=True)
     second_vehicle_type = models.FloatField(null=True, blank = True)
-    second_min_vehicle_cost = models.FloatField(null=True, blank = True)
     third_vehicle_type = models.FloatField(null=True, blank = True)
+    first_min_vehicle_cost = models.FloatField(null=True, blank=True)
+    second_min_vehicle_cost = models.FloatField(null=True, blank = True)
     third_min_vehicle_cost = models.FloatField(null=True, blank = True)
     first_total_cost_restaurant = models.FloatField(null=True, blank = True)
     second_total_cost_restaurant = models.FloatField(null=True, blank = True)
@@ -204,5 +204,3 @@ class Deliverers(models.Model):
         obj.save()
 
         return obj
-
-
