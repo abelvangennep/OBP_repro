@@ -13,3 +13,5 @@ pip install channels daphne redis django-redis channels-redis
 pip install pandas
 
 pip install django_pandas
+
+pip install scipy
