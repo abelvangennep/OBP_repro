@@ -18,6 +18,7 @@ from django_pandas.io import read_frame
 
 app = DjangoDash('SimpleExample')   # replaces dash.Dash
 
+
 analyses = Analyses.objects.all()
 results = Results.objects.all()
 df = read_frame(analyses)
@@ -90,7 +91,7 @@ app.layout = html.Div([
                          options=[{'label': 'Average tranpsortation and delivery time', 'value': 'first'},
                          {'label': 'Average vehicle cost and distance', 'value': 'second'},],
                          ),
-    dcc.Graph(id = 'fig2', figure = {})
+   dcc.Graph(id = 'fig2', figure = {})
 ])
 
 @app.callback(
