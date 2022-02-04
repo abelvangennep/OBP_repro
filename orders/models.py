@@ -116,9 +116,10 @@ class Orders(models.Model):
 
 
 class Results(models.Model):
+    order_extrabla = models.PositiveIntegerField(null = True, blank =True)
     order_id = models.PositiveIntegerField(null=True, blank=TRUE)
     customer_coordinate = models.FloatField(null=True, blank = True)
-    order_time = models.TimeField(null = True, blank = True)
+    order_time = models.TimeField(null=True, blank =True)
     first_restaurant = models.FloatField(null=True, blank = True)
     first_duration_restaurant = models.FloatField(null=True, blank = True)
     first_distance_restaurant = models.FloatField(null=True, blank = True)
@@ -132,12 +133,12 @@ class Results(models.Model):
     third_distance_restaurant = models.FloatField(null=True, blank = True)
     third_route_cost = models.FloatField(null=True, blank = True)
     pizza_order_amount = models.FloatField(null=True, blank = True)
-    first_restaurant_production_time = models.FloatField(null=True, blank = True)
-    second_restaurant_production_time = models.FloatField(null=True, blank = True)
-    third_restaurant_production_time = models.FloatField(null=True, blank = True)
     first_restaurant_capacity = models.FloatField(null=True, blank = True)
     second_restaurant_capacity = models.FloatField(null=True, blank = True)
     third_restaurant_capacity = models.FloatField(null=True, blank = True)
+    first_restaurant_production_time = models.FloatField(null=True, blank = True)
+    second_restaurant_production_time = models.FloatField(null=True, blank = True)
+    third_restaurant_production_time = models.FloatField(null=True, blank = True)
     first_actual_production_time = models.FloatField(null=True, blank=True)
     second_actual_production_time = models.FloatField(null=True, blank=True)
     third_actual_production_time = models.FloatField(null=True, blank=True)
@@ -150,6 +151,7 @@ class Results(models.Model):
     first_total_cost_restaurant = models.FloatField(null=True, blank = True)
     second_total_cost_restaurant = models.FloatField(null=True, blank = True)
     third_total_cost_restaurant = models.FloatField(null=True, blank = True)
+    back_vehicle_cost = models.FloatField(null=True, blank=True)
 
 class Analyses(models.Model):
     order = models.ForeignKey(Orders, null=True, on_delete=models.CASCADE)

@@ -23,23 +23,32 @@ results = Results.objects.all()
 df = read_frame(analyses)
 df2 = read_frame(results)
 
-def overview(duration,distance,vehicle,production,t_cost,route_cost):
-  avg_delivery_time = round(df2[duration].mean(),2)
-  avg_prep_and_delivery_time = round(df2[duration].mean() + df2[production].mean(),2)
-  avg_distance = round(df2[distance].mean(),2)
-  sum_vehicle_cost = round(df2[vehicle].sum(),2)
-  avg_cost = round(df2[t_cost].mean(),2)
-  avg_route_cost = round(df2[route_cost].mean(),2)
+#Correct delivery time:
 
-  data_insight = {'Avg distance(m)': avg_distance,
-                'Total vehicle cost':sum_vehicle_cost,
+df2['first_correct_delivery_time'] = df2['first_actual_production_time'] + df2['first_duration_restaurant']
+df2['second_correct_delivery_time'] = df2['second_actual_production_time'] + df2['second_duration_restaurant']
+df2['third_correct_delivery_time'] = df2['third_actual_production_time'] + df2['third_duration_restaurant']
+
+
+#Overview of different options, calculation of averages
+
+def overview(duration,distance,vehicle,production,t_cost,route_cost):
+    avg_transport_time = round(df2[duration].mean(),2)
+    avg_delivery_time = round(df2[duration].mean() + df2[production].mean(),2)
+    avg_distance = round(df2[distance].mean(),2)
+    sum_vehicle_cost = round(df2[vehicle].sum(),2)
+    avg_cost = round(df2[t_cost].mean(),2)
+    avg_route_cost = round(df2[route_cost].mean(),2)
+
+    data_insight = {'Avg distance(m)': avg_distance,
+                'Avg vehicle cost':sum_vehicle_cost,
                 'Avg Total Cost':avg_cost,
                 'Avg Route Cost': avg_route_cost}
   
-  data_insight_time = {'Avg delivery time': avg_delivery_time,
-                'Avg production and delivery time':avg_prep_and_delivery_time}
+    data_insight_time = {'Avg transportation time': avg_transport_time,
+                'Avg delivery time':avg_delivery_time}
   
-  return data_insight,data_insight_time
+    return data_insight,data_insight_time
 
 overview_first, overview_first_time = overview('first_duration_restaurant', 'first_distance_restaurant','first_min_vehicle_cost', 'first_actual_production_time', 'first_total_cost_restaurant', 'first_route_cost')
 overview_second, overview_second_time = overview('second_duration_restaurant', 'second_distance_restaurant', 'second_min_vehicle_cost', 'second_actual_production_time', 'second_total_cost_restaurant', 'second_route_cost')
@@ -63,21 +72,23 @@ output = output.append(overview_first, ignore_index = True)
 output = output.append(overview_second, ignore_index = True)
 output = output.append(overview_third, ignore_index = True)
 
+# Layout of dash figures:
 
 app.layout = html.Div([
     html.H2("Density distributions of perfomance features", style = {'color': 'white'}),
-    dcc.Dropdown(id='my-dpdn', multi=False, value='expected_production_time',
-                         options=[{'label': 'Expected production time', 'value': 'expected_production_time'},
-                         {'label': 'Real production time', 'value': 'real_production'},
-                         {'label': 'Delivery time', 'value': 'expected_delivery_time'},
-                         {'label': 'Comparing production time with different options', 'value': 'production_time_options'},
-                         {'label': 'Comparing route cost with different options', 'value': 'route_cost_options'}]
+    dcc.Dropdown(id='my-dpdn', multi=False, value='real_production',
+                         options=[
+                         {'label': 'Production time', 'value': 'real_production'},
+                         {'label': 'Transportation time', 'value': 'expected_delivery_time'},
+                         {'label': 'Comparing delivery time with different options', 'value': 'delivery_time_options'},
+                         {'label': 'Comparing vehicle cost with different options', 'value': 'vehicle_cost_options'},
+                         {'label': 'Comparing total cost with different options', 'value': 'total_cost_options'}]
                          ),
     dcc.Graph(id='fig', figure ={}),
     html.H2('Compare averages between options:', style = {'color': 'white'}),
     dcc.Dropdown(id='my-dpdn2', multi=False, value='first',
-                         options=[{'label': 'Average delivery and production time', 'value': 'first'},
-                         {'label': 'Average cost', 'value': 'second'},],
+                         options=[{'label': 'Average tranpsortation and delivery time', 'value': 'first'},
+                         {'label': 'Average vehicle cost and distance', 'value': 'second'},],
                          ),
     dcc.Graph(id = 'fig2', figure = {})
 ])
@@ -86,16 +97,10 @@ app.layout = html.Div([
     Output('fig', 'figure'),
     [Input('my-dpdn','value')])
 
+#Distribution graphs based on first dropdown selection choice 
+
 def update_graph(selected_val):
-    if selected_val == 'expected_production_time':
-        dff = []
-        dfff = []
-        for x in df['expected_production_time']:
-            dff.append(x.hour*60 + x.minute + x.second/60)
-        dfff = [dff]
-        groups_labels = ['']
-        figln = ff.create_distplot(dfff, groups_labels)
-    elif selected_val == 'real_production':
+    if selected_val == 'real_production':
         dff = []
         dfff = []
         for x in df['real_production']:
@@ -111,44 +116,59 @@ def update_graph(selected_val):
         dfff = [dff]
         groups_labels = ['']
         figln = ff.create_distplot(dfff, groups_labels)
-    elif selected_val == 'production_time_options':
+    elif selected_val == 'delivery_time_options':
         opt_1 = []
         opt_2 = []
         opt_3 = []
-        for x in df2['first_actual_production_time']:
+        for x in df2['first_correct_delivery_time']:
             opt_1.append(x)
-        for x in df2['second_actual_production_time']:
+        for x in df2['second_correct_delivery_time']:
             opt_2.append(x)
-        for x in df2['third_actual_production_time']:
+        for x in df2['third_correct_delivery_time']:
             opt_3.append(x)
         all_opt = [opt_1, opt_2, opt_3]
         print(all_opt)
         group_labels = ['Option 1', 'Option 2', 'Option 3']
-        figln = ff.create_distplot(all_opt, group_labels, bin_size =5)
-    elif selected_val == 'route_cost_options':
+        figln = ff.create_distplot(all_opt, group_labels, bin_size =2)
+    elif selected_val == 'vehicle_cost_options':
         opt_1 = []
         opt_2 = []
         opt_3 = []
-        for x in df2['first_route_cost']:
+        for x in df2['first_min_vehicle_cost']:
             opt_1.append(x)
-        for x in df2['second_route_cost']:
+        for x in df2['second_min_vehicle_cost']:
             opt_2.append(x)
-        for x in df2['third_route_cost']:
+        for x in df2['third_min_vehicle_cost']:
             opt_3.append(x)
         all_opt = [opt_1, opt_2, opt_3]
         group_labels = ['Option 1', 'Option 2', 'Option 3']
-        figln = ff.create_distplot(all_opt, group_labels, bin_size =50)
+        figln = ff.create_distplot(all_opt, group_labels, bin_size =.2)
+    elif selected_val == 'total_cost_options':
+        opt_1 = []
+        opt_2 = []
+        opt_3 = []
+        for x in df2['first_total_cost_restaurant']:
+            opt_1.append(x)
+        for x in df2['second_total_cost_restaurant']:
+            opt_2.append(x)
+        for x in df2['third_total_cost_restaurant']:
+            opt_3.append(x)
+        all_opt = [opt_1, opt_2, opt_3]
+        group_labels = ['Option 1', 'Option 2', 'Option 3']
+        figln = ff.create_distplot(all_opt, group_labels, bin_size =.2)
     return figln
 
 @app.callback(
     Output('fig2', 'figure'),
     [Input('my-dpdn2','value')])
 
+#Distribution graphs based on second dropdown selection choice 
+
 def update_graph(selected_val):
     if selected_val == 'second':
-        fig = px.bar(output, x = "Option", y = ["Avg Route Cost", "Avg Total Cost", "Avg distance(m)"], barmode="group")
+        fig = px.bar(output, x = "Option", y = ["Avg vehicle cost", "Avg distance(m)"], barmode="group")
     elif selected_val == 'first':
-        fig = px.bar(output_time, x= "Option", y = ['Avg delivery time', 'Avg production and delivery time'], barmode = "group")
+        fig = px.bar(output_time, x= "Option", y = ['Avg transportation time', 'Avg delivery time'], barmode = "group")
     return fig
 
 
