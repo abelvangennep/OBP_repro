@@ -1,17 +1,11 @@
-# OBP_repro
+# WELKOM in the OBP_repro
 
-## Notes:
-Activate virtual env: source env/bin/activate
+This contains the source code of the GUI, "if you read this" you are in the right directory for running the GUI
+This code uses a virtual env, so make sure that you are in the directory OBP_dashboard
 
-If changing statics, change orders > static. (Not OBP_dashboard > static) 
-Syntax to update OBP_dashboard > static: python manage.py collectstatic
+$ source env/bin/activate
+$ pip install -r requirements.txt
 
-pip install django_plotly_dash 
+Now we can run the code as follows:
 
-pip install channels daphne redis django-redis channels-redis
-
-pip install pandas
-
-pip install django_pandas
-
-pip install scipy
+$ python manage.py runserver
