@@ -7,4 +7,5 @@ $ source env/bin/activate
 $ pip install -r requirements.txt
 
 Now we can run the code as follows:
+
 $ python manage.py runserver
